@@ -12,6 +12,9 @@ public class VehicleInfoDTO {
     @JsonProperty("speed")
     private double speed;
 
+    public VehicleInfoDTO() {
+    }
+
     public VehicleInfoDTO(String vehicleId, String protocol, double speed) {
         this.vehicleId = vehicleId;
         this.protocol = protocol;

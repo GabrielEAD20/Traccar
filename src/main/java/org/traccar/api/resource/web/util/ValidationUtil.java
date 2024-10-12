@@ -1,30 +1,25 @@
 package org.traccar.api.resource.web.util;
 
-import org.traccar.model.Device;
-import org.traccar.model.Position;
+import jakarta.ws.rs.NotFoundException;
 
 import java.util.List;
 
 public class ValidationUtil {
 
-    // Valida que el dispositivo no sea nulo
-    public static void validateDevice(Device device) {
-        if (device == null) {
-            throw new IllegalArgumentException("Device cannot be null.");
+    // Validación genérica para listas
+    public static <T> List<T> requireNonEmptyList(List<T> list, String errorMessage) {
+        if (list == null || list.isEmpty()) {
+            throw new NotFoundException(errorMessage);
         }
+        return list;
     }
 
-    // Valida que la lista de posiciones no sea nula ni vacía
-    public static void validatePositions(List<Position> positions) {
-        if (positions == null || positions.isEmpty()) {
-            throw new IllegalArgumentException("No positions found for the device.");
+    // Validación genérica para objetos no nulos
+    public static <T> T requireNonNull(T object, String errorMessage) {
+        if (object == null) {
+            throw new NotFoundException(errorMessage);
         }
+        return object;
     }
 
-    // Valida una posición específica
-    public static void validatePosition(Position position) {
-        if (position == null) {
-            throw new IllegalArgumentException("Position cannot be null.");
-        }
-    }
 }
