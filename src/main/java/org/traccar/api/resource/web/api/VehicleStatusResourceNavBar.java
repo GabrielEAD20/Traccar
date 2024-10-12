@@ -20,6 +20,7 @@ public class VehicleStatusResourceNavBar {
     @Inject
     private DeviceDao deviceDao;
 
+
     @GET
     @Path("/{id}")
     public VehicleStatusNavBarDTO getVehicleStatus(@PathParam("id") long deviceId) throws StorageException {

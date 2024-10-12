@@ -4,6 +4,7 @@ import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import org.traccar.api.resource.web.models.dto.VehicleStatusDTO;
+import org.traccar.api.resource.web.services.PositionService;
 import org.traccar.model.Position;
 import org.traccar.storage.Storage;
 import org.traccar.storage.StorageException;
@@ -22,11 +23,13 @@ public class VehicleInfoResourceAdvanced {
     @Inject
     private Storage storage;
 
+    @Inject
+    private PositionService positionService;
+
     @GET
     @Path("/{id}")
     public VehicleStatusDTO getVehicleInfo(@PathParam("id") long deviceId) throws StorageException {
-        List<Position> positions = storage.getObjects(Position.class, new Request(
-                new Columns.All(), new Condition.Equals("deviceId", deviceId)));
+        List<Position> positions = positionService.getLatestPositionsByDeviceId(deviceId);
 
         if (!positions.isEmpty()) {
             Position latestPosition = positions.get(0);
