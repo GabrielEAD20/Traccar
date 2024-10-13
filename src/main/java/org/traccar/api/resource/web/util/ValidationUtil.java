@@ -1,5 +1,6 @@
 package org.traccar.api.resource.web.util;
 
+import jakarta.ws.rs.BadRequestException;
 import jakarta.ws.rs.NotFoundException;
 
 import java.util.List;
@@ -21,5 +22,9 @@ public class ValidationUtil {
         }
         return object;
     }
-
+    public static void validateDeviceId(Long value) {
+        if (value == null || value <= 0) {
+            throw new BadRequestException(" cannot be null or non-positive.");
+        }
+    }
 }
