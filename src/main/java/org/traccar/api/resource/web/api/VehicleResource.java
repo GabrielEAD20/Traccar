@@ -10,6 +10,7 @@ import jakarta.ws.rs.core.MediaType;
 import org.traccar.api.resource.web.config.VersionApiConstant;
 import org.traccar.api.resource.web.models.dto.VehicleInfoDTO;
 import org.traccar.api.resource.web.models.dto.VehicleStatusDTO;
+import org.traccar.api.resource.web.models.dto.VehicleStatusNavBarDTO;
 import org.traccar.api.resource.web.services.VehicleService;
 import org.traccar.storage.StorageException;
 
@@ -28,10 +29,15 @@ public class VehicleResource {
     }
 
     @GET
-    @Path("/status-nav-bar/{device-id}")
+    @Path("/info-advanced/{device-id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public VehicleStatusDTO getStatusDeviceForNavBar(@PathParam("device-id") long deviceId) throws StorageException {
+    public VehicleStatusDTO getStatusDevice(@PathParam("device-id") long deviceId) throws StorageException {
         return vehicleService.getVehicleStatus(deviceId);
     }
-
+    @GET
+    @Path("/nav-bar/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public VehicleStatusNavBarDTO getVehicleStatusForNavBar(@PathParam("id") long deviceId) throws StorageException {
+        return vehicleService.getVehicleNavBarStatus(deviceId);
+    }
 }

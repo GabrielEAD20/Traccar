@@ -7,6 +7,8 @@ import org.traccar.api.resource.web.dao.PositionDao;
 import org.traccar.api.resource.web.mapper.VehicleMapper;
 import org.traccar.api.resource.web.models.dto.VehicleInfoDTO;
 import org.traccar.api.resource.web.models.dto.VehicleStatusDTO;
+import org.traccar.api.resource.web.models.dto.VehicleStatusNavBarDTO;
+import org.traccar.api.resource.web.util.GpsUtils;
 import org.traccar.api.resource.web.util.ValidationUtil;
 import org.traccar.model.Device;
 import org.traccar.model.Position;
@@ -80,6 +82,46 @@ public class VehicleService {
         );
     }
 
+
+    public VehicleStatusNavBarDTO getVehicleNavBarStatus(long deviceId) throws StorageException {
+        // Obtener el dispositivo por su ID
+        Device device = deviceDao.getDeviceById(deviceId);
+
+        // Obtener las posiciones más recientes del dispositivo
+        List<Position> positions = deviceDao.getLatestPositionsByDeviceId(deviceId);
+
+        // Verificar si hay posiciones disponibles
+            Position latestPosition = positions.get(0);
+            Map<String, Object> attributes = latestPosition.getAttributes();
+
+            // Extraer los valores necesarios de los atributos
+            int satellitesVisible = attributes.containsKey(Position.KEY_SATELLITES)
+                    ? (Integer) attributes.get(Position.KEY_SATELLITES)
+                    : 0;
+
+            double speedKph = Math.round((latestPosition.getSpeed() * 1.852) * 100.0) / 100.0;
+            boolean moving = speedKph > 0;
+            boolean engineOn = attributes.containsKey("input") && attributes.get("input").equals("1");
+            String lastGpsDetection = GpsUtils.calculateLastGpsDetection(latestPosition.getDeviceTime());
+            boolean online = !latestPosition.getOutdated();
+            boolean gpsTracking = latestPosition.getValid() && satellitesVisible > 0 &&
+                    attributes.containsKey("hdop") &&
+                    (Double) attributes.get("hdop") < 1.0 && !latestPosition.getOutdated();
+            String deviceTimeFormatted = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(latestPosition.getDeviceTime());
+
+            // Mapear la posición a un DTO que se enviará como respuesta
+            return VehicleMapper.mapToVehicleStatusNavBarDTO(
+                    device.getName(),
+                    satellitesVisible,
+                    speedKph,
+                    moving,
+                    engineOn,
+                    lastGpsDetection,
+                    online,
+                    gpsTracking,
+                    deviceTimeFormatted
+            );
+    }
 
     public static boolean checkDoorStatus(Map<String, Object> attributes) {
 
