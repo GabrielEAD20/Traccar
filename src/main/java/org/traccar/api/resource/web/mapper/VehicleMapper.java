@@ -1,6 +1,7 @@
 package org.traccar.api.resource.web.mapper;
 
 import org.traccar.api.resource.web.models.dto.VehicleInfoDTO;
+import org.traccar.api.resource.web.models.dto.VehicleStatusDTO;
 
 public class VehicleMapper {
 
@@ -18,4 +19,38 @@ public class VehicleMapper {
 
         return dto;
     }
+    public static VehicleStatusDTO mapToVehicleStatusDTO(
+            double latitude,
+            double longitude,
+            double speedKmh,
+            String protocol,
+            String address,
+            double odometer,
+            int satellites,
+            boolean valid,
+            double signalStrength,
+            double temperature,
+            boolean doorStatus,
+            boolean engineStatus,
+            boolean vehicleState,
+            String deviceTime
+    ) {
+        return new VehicleStatusDTO(
+                vehicleState,
+                engineStatus,
+                speedKmh,
+                address,
+                latitude,
+                longitude,
+                odometer,
+                deviceTime,
+                satellites,
+                valid,
+                signalStrength,
+                temperature,
+                75.0, // SIN DATOS
+                doorStatus
+        );
+    }
+
 }
