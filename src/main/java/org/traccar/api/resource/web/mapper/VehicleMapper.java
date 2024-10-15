@@ -104,14 +104,14 @@ public class VehicleMapper {
 
     // Método para mapear HumidityAlertDTO
     public static HumidityAlertDTO mapToHumidityAlertDTO(
-            double latitude,
+            String nameDevice, double latitude,
             double longitude,
             double humidity,
             Date deviceTime
     ) {
         //TODO
         // Asignación de variables
-        String vehicleId = "A3K-459";
+        String vehicleId = nameDevice;
         String alertType = "High Humidity";
         String timestamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(deviceTime);
         String type = "Humidity";

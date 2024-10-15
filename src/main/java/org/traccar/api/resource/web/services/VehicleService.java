@@ -130,8 +130,10 @@ public class VehicleService {
         // 1. Obtener las posiciones más recientes
         List<Position> positions = positionDao.getLatestPositionsByDeviceId(deviceId);
         Position latestPosition = positions.get(0);
-
+        // 2 Obtener el dispositivo
+        Device device = deviceDao.getDeviceById(deviceId);
         // TODO: Extraer y mapear los datos a variables
+        String nameDevice = device.getName();
         double latitude = latestPosition.getLatitude();
         double longitude = latestPosition.getLongitude();
         double humidity = latestPosition.getAttributes().containsKey("humidity")
@@ -141,6 +143,7 @@ public class VehicleService {
 
         // Mapear los valores al DTO
         return VehicleMapper.mapToHumidityAlertDTO(
+                nameDevice,
                 latitude,
                 longitude,
                 humidity,
