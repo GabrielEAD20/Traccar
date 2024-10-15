@@ -10,12 +10,11 @@ RUN apt-get update && apt-get install -y \
     unzip \
     && rm -rf /var/lib/apt/lists/*
 
-# Asegurarse de que gradlew tiene permisos de ejecución
-COPY gradlew .
-RUN chmod +x ./gradlew
-
 # Copiar todos los archivos del proyecto al contenedor
 COPY . .
+
+# Asegurarse de que gradlew tiene permisos de ejecución
+RUN chmod +x ./gradlew
 
 # Ejecutar la construcción de Gradle (construir el servidor Traccar)
 RUN ./gradlew assemble
