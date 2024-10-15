@@ -94,7 +94,7 @@ public class VehicleService {
         Device device = deviceDao.getDeviceById(deviceId);
 
         // Obtener las posiciones más recientes del dispositivo
-        List<Position> positions = deviceDao.getLatestPositionsByDeviceId(deviceId);
+        List<Position> positions = positionDao.getLatestPositionsByDeviceId(deviceId);
         Position latestPosition = positions.get(0);
         Map<String, Object> attributes = latestPosition.getAttributes();
 
@@ -128,7 +128,7 @@ public class VehicleService {
 
     public HumidityAlertDTO getHumidityAlert(long deviceId) throws StorageException {
         // 1. Obtener las posiciones más recientes
-        List<Position> positions = deviceDao.getLatestPositionsByDeviceId(deviceId);
+        List<Position> positions = positionDao.getLatestPositionsByDeviceId(deviceId);
         Position latestPosition = positions.get(0);
 
         // TODO: Extraer y mapear los datos a variables

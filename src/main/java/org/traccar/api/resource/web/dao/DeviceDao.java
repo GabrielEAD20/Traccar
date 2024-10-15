@@ -21,8 +21,4 @@ public class DeviceDao {
                 new Columns.All(), new Condition.Equals("id", deviceId)));
     }
 
-    public List<Position> getLatestPositionsByDeviceId(long deviceId) throws StorageException {
-        return storage.getObjects(Position.class, new Request(
-                new Columns.All(), new Condition.LatestPositions(deviceId)));
-    }
 }

@@ -3,6 +3,7 @@ package org.traccar.api.resource.web.services;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.NotFoundException;
 import org.traccar.api.resource.web.dao.DeviceDao;
+import org.traccar.api.resource.web.dao.PositionDao;
 import org.traccar.api.resource.web.models.dto.HumidityAlertDTO;
 import org.traccar.model.Device;
 import org.traccar.model.Position;
@@ -23,9 +24,12 @@ public class HumidityAlertService {
     @Inject
     private DeviceDao deviceDao;
 
+    @Inject
+    private PositionDao positionDao;
+
     public HumidityAlertDTO getHumidityAlert(long deviceId) throws StorageException {
         // Obtén la última posición del dispositivo usando su deviceId
-        List<Position> positions = deviceDao.getLatestPositionsByDeviceId(deviceId);
+        List<Position> positions = positionDao.getLatestPositionsByDeviceId(deviceId);
 
 
         for (Position position: positions){
