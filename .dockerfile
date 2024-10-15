@@ -1,30 +1,35 @@
-# Usa una imagen de base con Java 17 (necesario para Traccar)
+# Usa una imagen base de OpenJDK 17
 FROM openjdk:17-jdk-slim AS builder
 
 # Establecer el directorio de trabajo
 WORKDIR /app
 
-# Instalar Gradle
-RUN apt-get update && apt-get install -y curl unzip
-RUN curl -s https://get.sdkman.io | bash && \
-    bash -c "source $HOME/.sdkman/bin/sdkman-init.sh && sdk install gradle 7.4.2"
+# Instalar dependencias necesarias (curl y unzip)
+RUN apt-get update && apt-get install -y \
+    curl \
+    unzip \
+    && rm -rf /var/lib/apt/lists/*
 
-# Copia el código fuente de tu proyecto al contenedor
+# Asegurarse de que gradlew tiene permisos de ejecución
+COPY gradlew .
+RUN chmod +x ./gradlew
+
+# Copiar todos los archivos del proyecto al contenedor
 COPY . .
 
-# Ejecutar el build de Gradle (construcción del servidor Traccar)
+# Ejecutar la construcción de Gradle (construir el servidor Traccar)
 RUN ./gradlew assemble
 
-# Segunda etapa para ejecutar el servidor
+# Segunda etapa para crear una imagen ligera solo con el JRE y el JAR
 FROM openjdk:17-jre-slim
 
 # Establecer el directorio de trabajo
 WORKDIR /app
 
-# Copiar el archivo generado en la etapa anterior
+# Copiar el archivo JAR generado desde la etapa de construcción anterior
 COPY --from=builder /app/target/tracker-server.jar /app/tracker-server.jar
 
-# Exponer el puerto que utiliza Traccar (por defecto es el 8082)
+# Exponer el puerto que utiliza Traccar (8082 por defecto)
 EXPOSE 8082
 
 # Comando para ejecutar el servidor Traccar
